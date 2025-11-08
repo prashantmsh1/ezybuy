@@ -17,6 +17,10 @@ app.get("/health", (req: Request, res: Response) => {
         timeStamp: Date.now(),
     });
 });
+
+app.get("/test", (req: Request, res: Response) => {
+    return res.status(200).json({ message: "Product service Authenticated " });
+});
 app.listen(3005, () => {
     console.log("Product service is running on port 3005");
 });

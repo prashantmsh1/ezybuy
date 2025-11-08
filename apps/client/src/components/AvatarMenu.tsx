@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useAuth } from "@/lib/AuthContext";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { CircleUser, LogOut, MenuIcon, ShoppingBagIcon } from "lucide-react";
 
 const AvatarMenu = () => {
     const { user, loading, logout } = useAuth();
@@ -76,11 +77,20 @@ const AvatarMenu = () => {
                         href="/profile"
                         onClick={() => setOpen(false)}
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                        <CircleUser className="inline-block mr-2 h-4 w-4" />
                         Profile
+                    </Link>
+                    <Link
+                        href="/orders"
+                        onClick={() => setOpen(false)}
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                        <ShoppingBagIcon className="inline-block mr-2 h-4 w-4" />
+                        Orders
                     </Link>
                     <button
                         onClick={handleLogout}
                         className="w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-gray-100">
+                        <LogOut className="inline-block mr-2 h-4 w-4" />
                         Logout
                     </button>
                 </div>
