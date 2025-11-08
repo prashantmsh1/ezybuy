@@ -1,0 +1,24 @@
+- **Monorepo Layout** apps/ hosts the admin and client Next.js apps plus Node services; packages/ supplies shared linting and TypeScript config.
+- **Package Manager** `pnpm@9` with Node >=18 (see root package.json); install and script execution should use pnpm to stay in sync with the lockfile.
+- **Turbo Scripts** Root scripts proxy to Turbo (`pnpm dev`, `pnpm build`, `pnpm lint`, `pnpm check-types`); filter to a single app via `pnpm --filter admin dev` or `pnpm --filter client dev`.
+- **Build Targets** `pnpm build` triggers `next build` for web apps and `tsc` for services; individual builds work through the same filtered commands.
+- **Lint & Types** `pnpm lint` and `pnpm check-types` fan out through Turbo; local packages expose these scripts so keep additions consistent.
+- **Admin App Router** `apps/admin` uses Next.js App Router with path alias `@/*`; components default to server modules unless marked `"use client"`.
+- **Admin UI Kit** Shadcn-style primitives live in `src/components/ui`; reuse `cn` from `src/lib/utils.ts` for class merging and follow existing variant patterns.
+- **Sidebar Pattern** `src/components/AppSidebar.tsx` drives navigation and sheet-based modals (AddProduct/AddUser); extend menus there to surface new sections.
+- **Data Tables** Table pages (`app/products`, `app/users`, `app/payments`) share the generic `DataTable` wrapper plus `TablePagination`; supply column defs via `ColumnDef` arrays in sibling `columns.tsx` files.
+- **Admin Forms** Creation sheets use `react-hook-form` with `zodResolver`; mirror the schema-definition + `<FormField>` pattern from `AddProduct.tsx` when adding new inputs.
+- **Theme Tokens** Tailwind 4 CSS variables are declared in `app/globals.css` using `@theme inline`; prefer consuming these vars instead of hard-coded colors/radii.
+- **Responsive Hook** `hooks/use-mobile.ts` exposes the canonical `useIsMobile` helper; reference it instead of duplicating viewport checks.
+- **Static Admin Data** User/product/payment tables currently read from local arrays in their route files; if swapping to live data keep the shape used by the table columns.
+- **Client App Router** `apps/client` also uses Next 15 App Router; the root page treats `searchParams` as an async value—preserve that signature when modifying.
+- **Client Fixtures** `components/ProductList.tsx` holds demo catalog data typed by `ProductsType` (`src/types.ts`); updates must keep IDs, color keys, and image filenames aligned.
+- **Cart Store** Zustand store in `src/stores/cartStore.ts` persists via `createJSONStorage`; guard UI rendering with the `hasHydrated` flag when reading cart contents.
+- **Client Forms** Shipping and payment forms consume Zod schemas exported from `src/types.ts`; pair them with `react-hook-form` resolvers for consistent validation messaging.
+- **Shared Assets** Product imagery lives under each app’s `public/products/` and user avatars under `apps/admin/public/users/`; keep filenames synchronized with static records.
+- **Microservices** `apps/product-service` (Express, port 3005), `apps/order-service` (Fastify, port 8001), and `apps/payment-service` (Hono, port 3010) expose health routes for integration.
+- **Service Dev Workflow** Run services with `pnpm --filter product-service dev` etc; scripts rely on `tsx --watch` and `.env` files if present.
+- **CORS Expectations** Product service only allows `http://localhost:3002` and `http://localhost:3003`; update `src/index.ts` if frontend ports change.
+- **Shared Configs** Extend `packages/typescript-config` and `packages/eslint-config` rather than copying base settings; services already inherit via `tsconfig.json`.
+- **Workspace Registration** New workspaces must be added to `pnpm-workspace.yaml`; align task names with `turbo.json` so caching and pipelines stay consistent.
+- **Testing Gap** No automated tests are configured; mirror the existing static fixtures or wire in real backends before introducing expectations on fetch calls.

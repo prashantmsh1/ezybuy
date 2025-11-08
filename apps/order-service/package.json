@@ -1,0 +1,23 @@
+{
+    "name": "order-service",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {
+        "check-types": "tsc --noEmit",
+        "dev": "tsx --env-file=.env  --watch src/index.ts",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@repo/typescript-config": "workspace:*",
+        "@types/node": "^20",
+        "tsx": "^4.20.6",
+        "typescript": "^5.9.3"
+    },
+    "dependencies": {
+        "fastify": "^5.6.1"
+    }
+}
