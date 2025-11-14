@@ -1,10 +1,10 @@
 import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 
-import { firebaseAuth } from "./middleware/authMiddleware.js";
+import { firebaseAuth } from "./middleware/authMiddleware";
 import { initializeDb, getDb } from "@repo/product-db";
 import { Product } from "@repo/product-db";
-
+import productRouter from "@/src/routes/product.routes";
 const app = express();
 
 app.use(
@@ -37,6 +37,9 @@ app.get("/products", async (req: Request, res: Response) => {
         return res.status(500).json({ error: "Failed to fetch products" });
     }
 });
+
+app.use("/product", productRouter);
+
 await initializeDb().catch((err: unknown) => {
     console.error("Failed to initialize database:", err);
     process.exit(1);

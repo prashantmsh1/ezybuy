@@ -1,6 +1,6 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
-import { shouldBeUser } from "./middleware/authMiddleware.js";
+import { shouldBeUser } from "./middleware/authMiddleware";
 import { initializeDb } from "@repo/product-db";
 import { cors } from "hono/cors";
 

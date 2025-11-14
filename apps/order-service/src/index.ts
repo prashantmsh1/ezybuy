@@ -1,7 +1,7 @@
 import fastifyCors from "@fastify/cors";
 import Fastify, { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
 
-import { firebaseAuth } from "./middleware/authMiddleware.js";
+import { firebaseAuth } from "./middleware/authMiddleware";
 import { initializeDb, getDb } from "@repo/product-db";
 import { userTable } from "@repo/product-db";
 
