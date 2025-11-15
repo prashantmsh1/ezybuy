@@ -1,5 +1,5 @@
 {
-  "id": "935d7367-763f-493b-80bc-cfe6960b4190",
+  "id": "edc63f9e-0a2a-499a-8e4a-6e6e95584f7f",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -100,13 +100,13 @@
         },
         "sizes": {
           "name": "sizes",
-          "type": "text",
+          "type": "json",
           "primaryKey": false,
           "notNull": true
         },
         "colors": {
           "name": "colors",
-          "type": "text",
+          "type": "json",
           "primaryKey": false,
           "notNull": true
         },

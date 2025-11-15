@@ -46,6 +46,10 @@ app.get("/products", async (req: Request, res: Response) => {
 app.use("/product", productRouter);
 app.use("/category", categoryRouter);
 
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+    console.error(err.stack);
+    return res.status(err.status || 500).json({ error: err.message || "Internal Server Error" });
+});
 await initializeDb().catch((err: unknown) => {
     console.error("Failed to initialize database:", err);
     process.exit(1);

@@ -1,13 +1,14 @@
+import { uuid } from "drizzle-orm/pg-core";
 import { integer, json, pgTable, serial, text, timestamp, varchar } from "drizzle-orm/pg-core";
 
 export const Product = pgTable("products", {
-    id: serial("id").primaryKey(),
+    id: serial("id").primaryKey(), // Changed to default(random())
     name: varchar("name", { length: 255 }).notNull(),
     description: text("description").notNull(),
     shortDescription: text("short_description").notNull(),
     price: integer("price").notNull(),
-    sizes: text("sizes").notNull(),
-    colors: text("colors").notNull(),
+    sizes: json("sizes").notNull(),
+    colors: json("colors").notNull(),
     category: varchar("category", { length: 100 }).notNull(),
     images: json("images").notNull(),
     categoryId: integer("category_id").notNull(),

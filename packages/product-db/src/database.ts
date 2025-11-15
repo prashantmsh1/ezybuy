@@ -1,13 +1,14 @@
 // Ensure the `pg` driver is installed alongside drizzle: `pnpm add pg`
-import { drizzle } from "drizzle-orm/node-postgres";
+import { drizzle, NodePgDatabase } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 
 import schema from "./schema";
 
 let pool: Pool | undefined;
-let _db: ReturnType<typeof drizzle> | undefined;
+let _db: NodePgDatabase<typeof schema> | undefined;
 
-export type Database = ReturnType<typeof drizzle>;
+export type Database = NodePgDatabase<typeof schema>;
+export let db: Database;
 
 function getLogger() {
     return process.env.NODE_ENV !== "production";
@@ -27,11 +28,12 @@ export async function initializeDb(connectionString?: string) {
             schema,
             logger: getLogger(),
         });
+        db = _db;
     }
     return _db;
 }
 
-export function getDb() {
+export function getDb(): Database {
     if (!_db) {
         if (!process.env.DATABASE_URL) {
             throw new Error("DATABASE_URL env var is required to initialize the database");
