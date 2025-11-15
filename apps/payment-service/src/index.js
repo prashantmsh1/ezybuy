@@ -1,10 +1,12 @@
-import { serve } from "@hono/node-server";
-import { Hono } from "hono";
-import { shouldBeUser } from "./middleware/authMiddleware.js";
-import { initializeDb } from "@repo/product-db";
-import { cors } from "hono/cors";
-const app = new Hono();
-app.use("*", cors({
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const node_server_1 = require("@hono/node-server");
+const hono_1 = require("hono");
+const authMiddleware_1 = require("./middleware/authMiddleware");
+const product_db_1 = require("@repo/product-db");
+const cors_1 = require("hono/cors");
+const app = new hono_1.Hono();
+app.use("*", (0, cors_1.cors)({
     origin: ["http://localhost:3002", "http://localhost:3003"], // or true
     credentials: true,
     allowHeaders: ["Content-Type", "Authorization"],
@@ -18,13 +20,15 @@ app.get("/health", (c) => {
         timeStamp: Date.now(),
     });
 });
-app.get("/test", shouldBeUser, (c) => {
-    return c.json({ message: "Payment service is authenticated" + JSON.stringify(c.get("user")) });
+app.get("/test", authMiddleware_1.shouldBeUser, (c) => {
+    return c.json({
+        message: "Payment service is authenticated" + JSON.stringify(c.get("user")),
+    });
 });
 const start = async () => {
     try {
-        await initializeDb();
-        serve({
+        await (0, product_db_1.initializeDb)();
+        (0, node_server_1.serve)({
             fetch: app.fetch,
             port: 3010,
         }, (info) => {

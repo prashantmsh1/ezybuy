@@ -21,7 +21,7 @@ export const shouldBeUser = createMiddleware<{
         return c.json({ error: "Unauthorized" }, 401);
     }
 
-    const idToken = authHeader.split(" ")[1];
+    const idToken    = authHeader.split(" ")[1];
     try {
         const decoded = await auth.verifyIdToken(idToken!);
         // attach decoded token to context state so handlers can read it

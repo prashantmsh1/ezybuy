@@ -5,8 +5,8 @@
     "exclude": ["dist", "build", "node_modules", "drizzle.config.ts"],
     "compilerOptions": {
         "target": "es2022",
-        "module": "es2022",
-        "moduleResolution": "node",
+        "module": "nodenext",
+        "moduleResolution": "nodenext",
         "baseUrl": ".",
         "outDir": "dist",
         "rootDir": "src",

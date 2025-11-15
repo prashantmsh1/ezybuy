@@ -1,11 +1,14 @@
-import { applicationDefault, initializeApp } from "firebase-admin/app";
-import { getAuth } from "firebase-admin/auth";
-import { createMiddleware } from "hono/factory";
-const defaultApp = initializeApp({
-    credential: applicationDefault(),
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.shouldBeUser = void 0;
+const app_1 = require("firebase-admin/app");
+const auth_1 = require("firebase-admin/auth");
+const factory_1 = require("hono/factory");
+const defaultApp = (0, app_1.initializeApp)({
+    credential: (0, app_1.applicationDefault)(),
 });
-const auth = getAuth(defaultApp);
-export const shouldBeUser = createMiddleware(async (c, next) => {
+const auth = (0, auth_1.getAuth)(defaultApp);
+exports.shouldBeUser = (0, factory_1.createMiddleware)(async (c, next) => {
     // request object
     const authHeader = c.req.header("authorization") || "";
     console.log("Authorization Header:", authHeader);

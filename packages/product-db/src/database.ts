@@ -2,7 +2,7 @@
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 
-import schema from "@schema";
+import schema from "./schema";
 
 let pool: Pool | undefined;
 let _db: ReturnType<typeof drizzle> | undefined;
