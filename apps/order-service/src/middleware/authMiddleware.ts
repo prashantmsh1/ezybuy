@@ -14,7 +14,6 @@ declare module "fastify" {
     }
 }
 
-// Firebase auth middleware
 export async function firebaseAuth(
     request: FastifyRequest,
     reply: FastifyReply,

@@ -4,16 +4,19 @@ import Fastify, { FastifyInstance, FastifyRequest, FastifyReply } from "fastify"
 import { firebaseAuth } from "./middleware/authMiddleware";
 import { initializeDb, getDb } from "@repo/product-db";
 import { userTable } from "@repo/product-db";
+import orderRoutes from "./routes/order.routes";
+import { connectToDB } from "@repo/order-db";
 
 const fastify: FastifyInstance = Fastify();
 
 fastify.register(fastifyCors, {
-    origin: ["http://localhost:3002", "http://localhost:3003"], // or true for all origins
+    // origin: ["http://localhost:3002", "http://localhost:3003"], // or true for all origins
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
 });
 
+fastify.register(orderRoutes);
 fastify.get("/", async (request: FastifyRequest, reply: FastifyReply) => {
     return reply.status(200).send({
         status: "ok",
@@ -45,10 +48,12 @@ fastify.get("/users", async (request: FastifyRequest, reply: FastifyReply) => {
 
 const start = async (): Promise<void> => {
     try {
-        await initializeDb();
+        // await initializeDb();
+        await connectToDB();
         await fastify.listen({ port: 8001 });
         console.log("Order Service is running at http://0.0.0.0:8001");
     } catch (err) {
+        console.error("Error starting Order Service: ", err);
         fastify.log.error(err as unknown);
         process.exit(1);
     }

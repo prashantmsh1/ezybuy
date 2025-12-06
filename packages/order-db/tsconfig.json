@@ -1,0 +1,20 @@
+{
+    "extends": "@repo/typescript-config/base.json",
+    "include": ["src/**/*"],
+
+    "exclude": ["dist", "build", "node_modules", "drizzle.config.ts"],
+    "compilerOptions": {
+        "target": "es2022",
+        "module": "nodenext",
+        "moduleResolution": "nodenext",
+        "baseUrl": ".",
+        "outDir": "dist",
+        "rootDir": "src",
+        "paths": {
+            "@/*": ["./src/*"],
+            "@db": ["./src/database.ts"],
+            "@order-db": ["./src/index.ts"]
+        },
+        "types": ["node"]
+    }
+}

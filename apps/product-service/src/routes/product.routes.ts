@@ -6,23 +6,14 @@ import {
     deleteProduct,
     getProduct,
     getProducts,
+    updateProduct,
 } from "../controller/product.controller";
 
 const router: Router = Router();
 
-router.get("/", async (req, res) => {
-    try {
-        const db = getDb();
-        const products = await db.select().from(Product);
-        return res.status(200).json(products);
-    } catch (err) {
-        console.error("Error fetching products:", err);
-        return res.status(500).json({ error: "Failed to fetch products" });
-    }
-});
-
 router.post("/", createProduct);
-router.put("/:id", deleteProduct);
+router.put("/:id", updateProduct);
+
 router.delete("/:id", deleteProduct);
 router.get("/", getProducts);
 router.get("/:id", getProduct);

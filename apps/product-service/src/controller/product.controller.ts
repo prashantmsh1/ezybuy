@@ -70,7 +70,6 @@ export const createProduct = async (req: Request, res: Response) => {
             }
         }
 
-        // If categoryId not provided, resolve it from categorySlug
         if (!prepared.categoryId) {
             if (!prepared.categorySlug) {
                 return res
@@ -97,8 +96,98 @@ export const createProduct = async (req: Request, res: Response) => {
         res.status(500).json({ error: err.message || "Failed to create product" });
     }
 };
-export const updateProduct = async (req: Request, res: Response) => {};
-export const deleteProduct = async (req: Request, res: Response) => {};
+
+export const updateProduct = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const incoming = req.body;
+    const data = incoming && typeof incoming === "object" ? (incoming.data ?? incoming) : null;
+
+    if (!data || typeof data !== "object") {
+        return res.status(400).json({ error: "Missing or invalid update payload" });
+    }
+
+    // Normalize fields similar to createProduct
+    if (Array.isArray(data.sizes)) data.sizes = JSON.stringify(data.sizes);
+    if (Array.isArray(data.colors)) data.colors = JSON.stringify(data.colors);
+    if (typeof data.images === "string") {
+        try {
+            data.images = JSON.parse(data.images);
+        } catch {
+            // leave as-is so DB can validate if needed
+        }
+    }
+
+    // If categorySlug provided but no categoryId, resolve it
+    if (!data.categoryId && data.categorySlug) {
+        const categories = await getDb()
+            .select()
+            .from(Category)
+            .where(eq(Category.slug, String(data.categorySlug)));
+        const category = categories[0];
+        if (!category) {
+            return res
+                .status(400)
+                .json({ error: `Category with slug "${data.categorySlug}" not found` });
+        }
+        data.categoryId = category.id;
+    }
+
+    // Remove undefined and disallowed fields to avoid passing them to .set()
+    const forbiddenKeys = new Set(["id", "createdAt", "updatedAt", "created_at", "updated_at"]);
+
+    const sanitizedEntries = Object.entries(data)
+        .filter(([k, v]) => v !== undefined && typeof v !== "function" && !forbiddenKeys.has(k))
+        .map(([k, v]) => {
+            // Convert ISO-like date strings or numeric timestamps to Date objects
+            if (typeof v === "string" && /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(v)) {
+                const d = new Date(v);
+                if (!isNaN(d.getTime())) return [k, d];
+            }
+            if (typeof v === "number" && (k.toLowerCase().includes("date") || k.endsWith("At"))) {
+                const d = new Date(v);
+                if (!isNaN(d.getTime())) return [k, d];
+            }
+            return [k, v];
+        });
+
+    const updateData: Record<string, any> = Object.fromEntries(sanitizedEntries);
+
+    if (Object.keys(updateData).length === 0) {
+        return res.status(400).json({ error: "No updatable fields provided" });
+    }
+
+    try {
+        const product = await getDb()
+            .update(Product)
+            .set(updateData)
+            .where(eq(Product.id, Number(id)))
+            .returning()
+            .then((rows) => rows[0]);
+
+        if (!product) {
+            return res.status(404).json({ error: "Product not found" });
+        }
+
+        res.status(200).json({ product, message: "Product updated successfully" });
+    } catch (err: any) {
+        console.error("Failed to update product:", err);
+        res.status(500).json({ error: err.message || "Failed to update product" });
+    }
+};
+
+export const deleteProduct = async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    const deletedCount = await getDb()
+        .delete(Product)
+        .where(eq(Product.id, Number(id)))
+        .execute()
+        .then((result) => result.rowCount || 0);
+    if (deletedCount === 0) {
+        return res.status(404).json({ error: "Product not found" });
+    }
+    res.status(200).json({ message: "Product deleted successfully" });
+};
 export const getProducts = async (req: Request, res: Response) => {
     const { sort, category, search, limit } = req.query;
 
@@ -140,4 +229,19 @@ export const getProducts = async (req: Request, res: Response) => {
     const products = await query;
     res.status(200).json({ products });
 };
-export const getProduct = async (req: Request, res: Response) => {};
+export const getProduct = async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    const product = await getDb()
+        .select()
+        .from(Product)
+        .where(eq(Product.id, Number(id)))
+        .limit(1)
+        .then((rows) => rows[0]);
+
+    if (!product) {
+        return res.status(404).json({ error: "Product not found" });
+    }
+
+    res.status(200).json({ product });
+};
