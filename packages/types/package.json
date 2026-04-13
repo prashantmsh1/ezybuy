@@ -1,0 +1,25 @@
+{
+    "name": "@repo/types",
+    "version": "1.0.0",
+    "main": "src/index.ts",
+    "type": "module",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "check-types": "tsc --noEmit"
+    },
+    "dependencies": {
+        "@repo/product-db": "workspace:*"
+    },
+    "devDependencies": {
+        "@repo/typescript-config": "workspace:*"
+        
+    }
+
+    ,
+    "exports":{
+        ".":{
+            "import": "./src/index.ts",
+            "types":"./src/index.ts"
+        }
+    }
+}

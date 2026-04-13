@@ -4,7 +4,7 @@ import cors from "cors";
 import { firebaseAuth } from "./middleware/authMiddleware.js";
 import { initializeDb, getDb, Product } from "@repo/product-db";
 import productRouter from "@/src/routes/product.routes.js";
-
+import authRouter from "@/src/routes/auth.routes.js";
 import categoryRouter from "@/src/routes/category.routes.js";
 const app = express();
 
@@ -45,6 +45,7 @@ app.get("/products", async (req: Request, res: Response) => {
 
 app.use("/product", productRouter);
 app.use("/category", categoryRouter);
+app.use("/auth", authRouter);
 
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
     console.error(err.stack);

@@ -6,13 +6,13 @@ const defaultApp = initializeApp({
     credential: applicationDefault(),
 });
 
-const auth = getAuth(defaultApp);
+export const auth = getAuth(defaultApp);
 
 // attach user type to Request
 declare global {
     namespace Express {
         interface Request {
-            user?: DecodedIdToken;
+            user: DecodedIdToken & { admin?: boolean };
         }
     }
 }
@@ -29,10 +29,18 @@ export async function firebaseAuth(req: Request, res: Response, next: NextFuncti
     try {
         const decoded = await auth.verifyIdToken(idToken!);
         req.user = decoded;
-
+        console.log("Decoded Token:", decoded);
         next();
     } catch (err) {
         console.error("Firebase token verification failed:", err);
         return res.status(401).json({ error: "Unauthorized" });
     }
+}
+
+
+export async function shouldBeAdmin(req: Request, res: Response, next: NextFunction) {
+    if (!req.user?.admin) {
+        return res.status(401).json({ error: "Unauthorized" });
+    }
+    next();
 }

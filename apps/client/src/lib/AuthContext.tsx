@@ -40,8 +40,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
             setUser(user);
+            if (user) {
+                const token = await user.getIdToken(true);
+                console.log("Verify using Firebase Admin Token:", token);
+                document.cookie = `token=${token}; path=/; max-age=3600`;
+            }
             setLoading(false);
         });
         return unsubscribe;
@@ -50,6 +55,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const signIn = async (email: string, password: string) => {
         await signInWithEmailAndPassword(auth, email, password);
         const idToken = await auth.currentUser?.getIdToken();
+        
         if (idToken) {
             document.cookie = `token=${idToken}; path=/; max-age=3600`;
         }

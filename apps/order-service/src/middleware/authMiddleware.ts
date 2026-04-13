@@ -10,7 +10,7 @@ const auth: Auth = getAuth(defaultApp);
 
 declare module "fastify" {
     interface FastifyRequest {
-        user?: DecodedIdToken;
+        user?: DecodedIdToken & { admin?: boolean };
     }
 }
 
@@ -34,4 +34,13 @@ export async function firebaseAuth(
         console.error("Firebase token verification failed:", err);
         return reply.status(401).send({ error: "Unauthorized" });
     }
+}
+
+
+
+export async function shouldBeAdmin(req: FastifyRequest, res: FastifyReply, next: HookHandlerDoneFunction) {
+ if (!req.user?.admin) {
+  return res.status(401).send({ error: "Unauthorized" });
+ }
+ next();
 }
