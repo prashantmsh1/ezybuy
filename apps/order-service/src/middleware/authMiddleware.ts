@@ -8,11 +8,8 @@ const defaultApp = initializeApp({
 
 const auth: Auth = getAuth(defaultApp);
 
-declare module "fastify" {
-    interface FastifyRequest {
-        user?: DecodedIdToken & { admin?: boolean };
-    }
-}
+import { AuthUser } from "@repo/types";
+import "@repo/types/fastify";
 
 export async function firebaseAuth(
     request: FastifyRequest,

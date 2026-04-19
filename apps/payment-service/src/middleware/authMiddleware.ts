@@ -7,9 +7,12 @@ const defaultApp = initializeApp({
 
 const auth = getAuth(defaultApp);
 
+import { AuthUser } from "@repo/types";
+import "@repo/types/hono";
+
 export const shouldBeUser = createMiddleware<{
  Variables: {
-  user: DecodedIdToken;
+  user: AuthUser;
  };
 }>(async (c, next) => {
  // request object
@@ -23,7 +26,7 @@ export const shouldBeUser = createMiddleware<{
 
  const idToken = authHeader.split(" ")[1];
  try {
-  const decoded = await auth.verifyIdToken(idToken!);
+  const decoded = (await auth.verifyIdToken(idToken!)) as AuthUser;
   // attach decoded token to context state so handlers can read it
   c.set("user", decoded);
   await next();
@@ -35,7 +38,7 @@ export const shouldBeUser = createMiddleware<{
 
 export const shouldBeAdmin = createMiddleware<{
     Variables: {
-        user: DecodedIdToken & { admin?: boolean };
+        user: AuthUser;
     };
 }>(async (c, next) => {
     const user = c.get("user");

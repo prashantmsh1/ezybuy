@@ -2,13 +2,15 @@
     "name": "payment-service",
     "type": "module",
     "scripts": {
+        "check-types": "tsc --noEmit",
         "dev": "tsx --env-file=.env --watch src/index.ts",
         "build": "tsc",
         "start": "node dist/index.js"
     },
     "dependencies": {
-        "@repo/product-db": "workspace:*",
         "@hono/node-server": "^1.19.5",
+        "@repo/product-db": "workspace:*",
+        "@repo/types": "workspace:^",
         "firebase-admin": "^13.6.0",
         "hono": "^4.10.3"
     },

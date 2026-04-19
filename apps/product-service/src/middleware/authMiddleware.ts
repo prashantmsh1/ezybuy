@@ -8,14 +8,8 @@ const defaultApp = initializeApp({
 
 export const auth = getAuth(defaultApp);
 
-// attach user type to Request
-declare global {
-    namespace Express {
-        interface Request {
-            user: DecodedIdToken & { admin?: boolean };
-        }
-    }
-}
+import { AuthUser } from "@repo/types";
+import "@repo/types/express";
 
 // Firebase auth middleware
 export async function firebaseAuth(req: Request, res: Response, next: NextFunction) {
