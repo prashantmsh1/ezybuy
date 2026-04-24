@@ -1,5 +1,5 @@
 import { FastifyInstance } from "fastify";
-import { firebaseAuth } from "../middleware/authMiddleware";
+import { firebaseAuth, shouldBeAdmin, shouldBeUser } from "../middleware/authMiddleware";
 import { Order } from "@repo/order-db";
 export const orderRoutes = (app: FastifyInstance) => {
     app.post("/order", async (request, reply) => {
@@ -9,7 +9,7 @@ export const orderRoutes = (app: FastifyInstance) => {
     app.get(
         "/user-orders",
         {
-            preHandler: firebaseAuth,
+            preHandler: [shouldBeUser],
         },
         async (request, reply) => {
             const orderData = await Order.find({ userId: request.user?.uid });

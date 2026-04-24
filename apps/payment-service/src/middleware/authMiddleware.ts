@@ -8,7 +8,7 @@ const defaultApp = initializeApp({
 const auth = getAuth(defaultApp);
 
 import { AuthUser } from "@repo/types";
-import "@repo/types/hono";
+import "@repo/types/hono"
 
 export const shouldBeUser = createMiddleware<{
  Variables: {

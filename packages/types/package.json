@@ -14,7 +14,8 @@
         "@repo/typescript-config": "workspace:*",
         "@types/express": "^5.0.4",
         "fastify": "^5.6.1",
-        "hono": "^4.10.3"
+        "hono": "^4.10.3",
+        "zod": "^4.0.14"
     },
     "exports": {
         ".": {
@@ -22,13 +23,16 @@
             "types": "./src/index.ts"
         },
         "./express": {
-            "types": "./src/express.ts"
+            "types": "./src/express.ts",
+            "import": "./src/express.ts"
         },
         "./fastify": {
-            "types": "./src/fastify.ts"
+            "types": "./src/fastify.ts",
+            "import": "./src/fastify.ts"
         },
         "./hono": {
-            "types": "./src/hono.ts"
+            "types": "./src/hono.ts",
+            "import": "./src/hono.ts"
         }
     }
 }

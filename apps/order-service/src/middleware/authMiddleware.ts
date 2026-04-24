@@ -13,8 +13,7 @@ import "@repo/types/fastify";
 
 export async function firebaseAuth(
     request: FastifyRequest,
-    reply: FastifyReply,
-    next: HookHandlerDoneFunction
+    reply: FastifyReply
 ): Promise<void> {
     const authHeader = request.headers.authorization || "";
 
@@ -26,7 +25,7 @@ export async function firebaseAuth(
     try {
         const decoded = await auth.verifyIdToken(idToken!);
         request.user = decoded;
-        next();
+
     } catch (err) {
         console.error("Firebase token verification failed:", err);
         return reply.status(401).send({ error: "Unauthorized" });
@@ -35,9 +34,14 @@ export async function firebaseAuth(
 
 
 
-export async function shouldBeAdmin(req: FastifyRequest, res: FastifyReply, next: HookHandlerDoneFunction) {
+export async function shouldBeAdmin(req: FastifyRequest, res: FastifyReply) {
  if (!req.user?.admin) {
   return res.status(401).send({ error: "Unauthorized" });
  }
- next();
+}
+
+export async function shouldBeUser(req: FastifyRequest, res: FastifyReply) {
+ if (req.user?.role !== "user") {
+  return res.status(401).send({ error: "Unauthorized" });
+ }
 }

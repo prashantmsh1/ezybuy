@@ -4,9 +4,6 @@
         "module": "commonjs",
         "moduleResolution": "node",
         "baseUrl": ".",
-        "paths": {
-            "@repo/types": ["../../packages/types/src/index.ts"],
-            "@repo/types/*": ["../../packages/types/src/*"]
-        }
+        "outDir": "dist"
     }
 }

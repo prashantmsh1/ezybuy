@@ -3,7 +3,7 @@ import { Hono } from "hono";
 import { shouldBeUser } from "./middleware/authMiddleware";
 import { initializeDb } from "@repo/product-db";
 import { cors } from "hono/cors";
-
+import paymentRouter from "./routes/payment.routes"
 const app = new Hono();
 app.use(
     "*",
@@ -29,6 +29,8 @@ app.get("/test", shouldBeUser, (c) => {
         message: "Payment service is authenticated" + JSON.stringify(c.get("user") as unknown),
     });
 });
+
+app.route("/api/v1/payment",paymentRouter);
 
 const start = async () => {
     try {

@@ -8,13 +8,14 @@ import {
     getProducts,
     updateProduct,
 } from "../controller/product.controller";
+import { firebaseAuth, shouldBeAdmin } from "../middleware/authMiddleware";
 
 const router: Router = Router();
 
-router.post("/", createProduct);
-router.put("/:id", updateProduct);
+router.post("/",firebaseAuth,shouldBeAdmin, createProduct);
+router.put("/:id", firebaseAuth,shouldBeAdmin, updateProduct);
 
-router.delete("/:id", deleteProduct);
+router.delete("/:id", firebaseAuth, shouldBeAdmin, deleteProduct);
 router.get("/", getProducts);
 router.get("/:id", getProduct);
 

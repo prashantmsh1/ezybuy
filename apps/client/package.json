@@ -23,6 +23,7 @@
     "devDependencies": {
         "@repo/eslint-config": "workspace:*",
         "@repo/typescript-config": "workspace:*",
+        "@repo/types": "workspace:*",
         "@tailwindcss/postcss": "@hookform/resolvers/zod",
         "@types/node": "^20",
         "@types/react": "^19",

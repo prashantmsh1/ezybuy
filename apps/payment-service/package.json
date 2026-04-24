@@ -9,10 +9,12 @@
     },
     "dependencies": {
         "@hono/node-server": "^1.19.5",
+        "@repo/order-db": "workspace:*",
         "@repo/product-db": "workspace:*",
         "@repo/types": "workspace:^",
         "firebase-admin": "^13.6.0",
-        "hono": "^4.10.3"
+        "hono": "^4.10.3",
+        "stripe": "^22.0.2"
     },
     "devDependencies": {
         "@repo/typescript-config": "workspace:*",

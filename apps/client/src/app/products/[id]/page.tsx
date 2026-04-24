@@ -23,8 +23,9 @@ const product: ProductType = {
 export const generateMetadata = async ({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) => {
+  const { id } = await params;
   // TODO:get the product from db
   // TEMPORARY
   return {
@@ -40,6 +41,7 @@ const ProductPage = async ({
   params: Promise<{ id: string }>;
   searchParams: Promise<{ color: string; size: string }>;
 }) => {
+  const { id } = await params;
   const { size, color } = await searchParams;
 
   const selectedSize = size || (product.sizes[0] as string);
@@ -49,7 +51,7 @@ const ProductPage = async ({
       {/* IMAGE */}
       <div className="w-full lg:w-5/12 relative aspect-[2/3]">
         <Image
-          src={product.images[selectedColor]}
+          src={product.images[selectedColor] || ""}
           alt={product.name}
           fill
           className="object-contain rounded-md"
